@@ -13,6 +13,25 @@
 		<title>Login</title>
 	</head>
 	<body>
+        <img src="./background.jpg" alt="background" />
 		<slot />
 	</body>
 </html>
+
+<style>
+    body {
+        width : 100vw;
+        height : 100vh;
+        margin : 0;
+        padding : 0;
+        overflow : hidden;
+        box-sizing : border-box;
+    }
+    img {
+        width : 100vw;
+        height : 100vh;
+        object-fit : cover;
+        position : fixed;
+        z-index : -1;
+    }
+</style>
