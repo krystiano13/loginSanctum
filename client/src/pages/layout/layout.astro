@@ -1,5 +1,5 @@
 ---
-
+import { ViewTransitions } from "astro:transitions";
 ---
 
 <html lang="en">
@@ -11,6 +11,7 @@
         <meta name="keywords" content="Login, Register, Sanctum, Astro, Laravel" />
         <meta name="description" content="Simple login system with astro and laravel" />
 		<title>Login</title>
+        <ViewTransitions />
 	</head>
 	<body>
         <img src="./background.jpg" alt="background" />
@@ -39,3 +40,4 @@
         z-index : -1;
     }
 </style>
+
