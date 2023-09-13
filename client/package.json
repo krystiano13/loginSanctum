@@ -10,7 +10,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^3.0.13"
+    "astro": "^3.0.13",
+    "nanostores": "^0.9.3"
   },
   "devDependencies": {
     "sass": "^1.66.1"
