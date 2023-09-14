@@ -19,11 +19,15 @@ import Layout from './layout/layout.astro';
 </Layout>
 
 <script>
+	import { checkToken } from '../checkToken';
+
 	//create account info
 	if(localStorage.getItem('info')) {
 		alert(localStorage.getItem('info'));
 		localStorage.removeItem('info');
 	}
+
+	checkToken();
 
 	const form = document.querySelector('form');
 	const errors = document.querySelector('.errors');

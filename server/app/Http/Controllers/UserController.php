@@ -63,15 +63,15 @@ class UserController extends Controller
 
             return response() -> json([
                 'status' => true,
-                'token' => $token -> plainTextToken,
-                'user' => auth() -> user() -> name
+                'token' => $token -> accessToken -> id,
+                'user' => auth() -> user() -> name,
             ],200);
         }
     }
 
    public function checkToken(Request $request) {
         if($request -> get('token') && $request -> get('name')) {
-            $token = Token::where('token', $request -> get('token'));
+            $token = Token::where('id', $request -> get('token'));
 
             if($token -> count() > 0 && 
             (strtotime(now()) - strtotime($token -> get('expires_at') -> first() -> expires_at)) < 0
