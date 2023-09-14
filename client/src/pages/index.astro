@@ -6,19 +6,67 @@ import Layout from './layout/layout.astro';
 	<form transition:animate="slide">
 		<h1>Welcome Back</h1>
 		<label>Username</label>
-		<input type="text" placeholder="Enter your username" required />
+		<input name="name" type="text" placeholder="Enter your username" required />
 		<label>Password</label>
-		<input type="password" placeholder="Enter your password" required />
+		<input name="password" type="password" placeholder="Enter your password" required />
 		<button type="submit">Login</button>
 		<a href="/register">Don't have an account ?</a>
+
+		<div class="errors">
+
+		</div>
 	</form>
 </Layout>
 
 <script>
+	//create account info
 	if(localStorage.getItem('info')) {
 		alert(localStorage.getItem('info'));
 		localStorage.removeItem('info');
 	}
+
+	const form = document.querySelector('form');
+	const errors = document.querySelector('.errors');
+
+	form.addEventListener('submit',async (e) => {
+		e.preventDefault();
+		const formData = new FormData(form);
+
+		const appendError = (el) => {
+			const p = document.createElement('p');
+			p.innerText = el;
+			errors.appendChild(p);
+		}
+
+		await fetch('http://127.0.0.1:8000/api/login', { method : 'POST', body: formData })
+			.then(res => res.json())
+			.then(data => {
+				if(data.errors) {
+					errors.innerHTML = "";
+
+					data.errors.password.forEach(element => {
+						appendError(element);
+					});
+
+					data.errors.name.forEach(element => {
+						appendError(element);
+					});
+				}
+
+				else if(data.message) {
+					errors.innerHTML = "";
+					appendError(data.message);
+				}
+
+				else {
+					localStorage.setItem('current_user', data.user);
+					localStorage.setItem('token', data.token);
+
+					window.location.href = '/panel';
+				}
+			})
+	});
+	
 </script>
 
 <style lang="scss">
