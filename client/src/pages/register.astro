@@ -6,17 +6,63 @@ import Layout from "./layout/layout.astro";
 	<form transition:animate="slide">
 		<h1>Register</h1>
 		<label>Username</label>
-		<input type="text" placeholder="Enter your username" required />
+		<input name="name" type="text" placeholder="Enter your username" required />
         <label>Email</label>
-		<input type="email" placeholder="Enter your email address" required />
+		<input name="email" type="email" placeholder="Enter your email address" required />
 		<label>Password</label>
-		<input type="password" placeholder="Enter your password" required />
+		<input name="password" type="password" placeholder="Enter your password" required />
         <label>Reapeat Password</label>
-		<input type="password" placeholder="Enter your password" required />
+		<input name="password_confirmation" type="password" placeholder="Enter your password" required />
 		<button type="submit">Create Account</button>
 		<a href="/">Do you have an account ?</a>
+
+		<div class="errors">
+
+		</div>
 	</form>
 </Layout>
+
+<script>
+	const form = document.querySelector('form');
+	const errors = document.querySelector('.errors');
+	
+	form.addEventListener('submit',async (e) => {
+		e.preventDefault();
+		const formData = new FormData(form);
+
+		const appendError = (el) => {
+			const p = document.createElement('p');
+			p.innerText = el;
+			errors.appendChild(p);
+		}
+
+		await fetch('http://127.0.0.1:8000/api/register', { method: 'POST', body: formData })
+			.then(res => res.json())
+			.then(data => {
+				if(data.errors) {
+					data.errors.email.forEach(element => {
+						appendError(element);
+					});
+
+					data.errors.password.forEach(element => {
+						appendError(element);
+					});
+
+					data.errors.name.forEach(element => {
+						appendError(element);
+					});
+
+					localStorage.removeItem('info');
+				}
+
+				else {
+					localStorage.setItem('info', 'Account created');
+					window.location.href = '/';
+				}
+			})
+	})
+
+</script>
 
 <style lang="scss">
 	form {
