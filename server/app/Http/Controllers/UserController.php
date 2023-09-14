@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Token;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -69,8 +70,24 @@ class UserController extends Controller
     }
 
    public function checkToken(Request $request) {
-        if($request -> get('token')) {
-            
+        if($request -> get('token') && $request -> get('name')) {
+            $token = Token::where('token', $request -> get('token'));
+
+            if($token -> count() > 0 && (strtotime($token -> get('expires_at')) - now()) > 0) {
+                return response() -> json([
+                    'status' => true,
+                    'token' => $request -> get('token'),
+                    'name' => $request -> get('name')
+                ], 200);
+            }
+
+            else {
+                return response() -> json([
+                    'status' => false,
+                    'message' => 'token has expired'
+                ], 200);
+            }
+
         }
    }
 }
