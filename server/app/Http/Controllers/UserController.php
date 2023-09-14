@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
     public function register(Request $request) {
         $fields = $request -> all();
 
@@ -31,6 +32,38 @@ class UserController extends Controller
             'status' => true,
             'message' => 'successfully created an account',
         ], 200);
+    }
 
+    public function login(Request $request) {
+        $fields = $request -> all();
+
+        $validator = Validator::make($fields,[
+            'name' => ['required'],
+            'password' => ['required']
+        ]);
+
+        if($validator -> fails()) {
+            return response() -> json([
+                'status' => false,
+                'message' => 'validation error',
+                'errors' => $validator -> errors()
+            ],401);
+        }
+
+        if(!auth() -> attempt(['name' => $fields['name'], 'password' => $fields['password']])) {
+            return response() -> json([
+                'status' => false,
+                'message' => 'Wrong username or password'
+            ],401);
+        }
+
+        else {
+            $token = auth() -> user() -> createToken('user_token',expiresAt:now() -> addDay());
+
+            return response() -> json([
+                'status' => true,
+                'token' => $token -> plainTextToken
+            ],200);
+        }
     }
 }
