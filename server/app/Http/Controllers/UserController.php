@@ -73,7 +73,7 @@ class UserController extends Controller
         if($request -> get('token') && $request -> get('name')) {
             $token = Token::where('token', $request -> get('token'));
 
-            if($token -> count() > 0 && (strtotime($token -> get('expires_at')) - now()) > 0) {
+            if($token -> count() > 0 && (strtotime(now()) - strtotime($token -> get('expires_at'))) > 0) {
                 return response() -> json([
                     'status' => true,
                     'token' => $request -> get('token'),
