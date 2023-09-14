@@ -58,12 +58,19 @@ class UserController extends Controller
         }
 
         else {
-            $token = auth() -> user() -> createToken('user_token',expiresAt:now() -> addDay());
+            $token = auth() -> user() -> createToken(auth() -> user() -> name, expiresAt:now() -> addHour());
 
             return response() -> json([
                 'status' => true,
-                'token' => $token -> plainTextToken
+                'token' => $token -> plainTextToken,
+                'user' => auth() -> user() -> name
             ],200);
         }
     }
+
+   public function checkToken(Request $request) {
+        if($request -> get('token')) {
+            
+        }
+   }
 }
